@@ -1,0 +1,139 @@
+version: 2.1
+
+defaults: &defaults
+  working_directory: ~/rom-mongo
+  docker:
+    - image: cimg/ruby:<< parameters.ruby-version >>
+
+orbs:
+  ruby: circleci/ruby@1.8.0
+
+references:
+  restore_bundle_cache: &restore_bundle_cache
+    restore_cache:
+      keys:
+        - rom-mongo-{{ checksum "rom-mongodb.gemspec" }}
+
+  bundle_install: &bundle_install
+    run:
+      name: Installing gems
+      command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+
+  save_bundle_cache: &save_bundle_cache
+    save_cache:
+      key: rom-mongo-{{ checksum "rom-mongodb.gemspec" }}
+      paths:
+        - vendor/bundle
+
+  install_codeclimate_reporter: &install_codeclimate_reporter
+    run:
+      name: Installing CodeClimate test reporter
+      command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+  use_latest_gemspec: &use_latest_gemspec
+    run:
+      name: Using latest gemspec
+      command: |
+            cp .circleci/gemspec_latest rom-mongodb.gemspec
+
+  use_compatible_gemspec: &use_compatible_gemspec
+    run:
+      name: Using compatible gemspec
+      command: |
+            cp .circleci/gemspec_compatible rom-mongodb.gemspec
+
+jobs:
+  linters-ruby:
+    parameters:
+      ruby-version:
+        type: string
+
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - <<: *use_latest_gemspec
+      - <<: *restore_bundle_cache
+      - <<: *bundle_install
+      - <<: *save_bundle_cache
+
+      - run:
+          name: Running Overcommit
+          command: |
+            bundle exec overcommit -s
+            SKIP=AuthorEmail,AuthorName bundle exec overcommit -r
+
+  tests-ruby:
+    parameters:
+      ruby-version:
+        type: string
+
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - <<: *use_latest_gemspec
+      - <<: *restore_bundle_cache
+      - <<: *bundle_install
+      - <<: *save_bundle_cache
+      - <<: *install_codeclimate_reporter
+
+      - run:
+          name: Running RSpec
+          command: |
+            ./cc-test-reporter before-build
+            bundle exec rspec
+
+      # - run:
+      #     name: Creating CodeClimate test coverage report
+      #     command: |
+      #       ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+
+      - store_artifacts:
+          name: Saving Simplecov coverage artifacts
+          path: ~/rom-mongo/coverage
+          destination: coverage
+
+      # - deploy:
+      #     name: Uploading CodeClimate test coverage report
+      #     command: |
+      #       ./cc-test-reporter sum-coverage --output - --parts $CIRCLE_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
+
+  compatibility-ruby:
+    parameters:
+      ruby-version:
+        type: string
+    docker:
+      - image: cimg/ruby:<< parameters.ruby-version >>
+    steps:
+      - checkout
+      - <<: *use_compatible_gemspec
+      - ruby/install-deps:
+          bundler-version: "2.3.16"
+          with-cache: false
+          path: './vendor/custom_bundle'
+      - run:
+          name: Running compatibility tests
+          command: bundle exec rspec
+
+workflows:
+  build_and_test:
+    jobs:
+      - linters-ruby:
+          matrix:
+            parameters:
+              ruby-version: ["3.1"]
+      - tests-ruby:
+          matrix:
+            parameters:
+              ruby-version: ["3.1"]
+      - compatibility-ruby:
+          matrix:
+            parameters:
+              ruby-version: ["2.5", "2.6", "2.7", "3.0"]
