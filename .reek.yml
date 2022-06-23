@@ -2,5 +2,9 @@ detectors:
   IrresponsibleModule:
     enabled: false
 
+  FeatureEnvy:
+    exclude:
+      - ROM::Mongo::Dataset#insert
+
 exclude_paths:
   - spec/support/helpers
