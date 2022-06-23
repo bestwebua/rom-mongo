@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Mongo::Dataset do
-  let(:collection) { instance_double('MongoCollection') }
-  let(:collection_view) { instance_double('MongoCollectionView') }
+  let(:collection) { instance_double('MongoCollectionInstance') }
+  let(:collection_view) { instance_double('MongoCollectionViewInstance') }
   let(:dataset_instance) { described_class.new(collection) }
 
   describe '#collection' do
@@ -88,7 +88,7 @@ RSpec.describe ROM::Mongo::Dataset do
     context 'when inserts one document' do
       let(:attributes) { random_dataset(size: 1) }
       let(:inserted_ids) { [random_bson_object_id.to_s] }
-      let(:insert_result) { instance_double('MongoOperationInsertResult') }
+      let(:insert_result) { instance_double('MongoOperationInsertResultInstance') }
 
       it 'returns inserted ids collection' do
         expect(collection)
@@ -104,7 +104,7 @@ RSpec.describe ROM::Mongo::Dataset do
       context 'when inserts more then one document' do
         let(:attributes) { random_dataset(size: 2) }
         let(:inserted_ids) { ::Array.new(2) { random_bson_object_id.to_s } }
-        let(:insert_result) { instance_double('MongoOperationInsertResult') }
+        let(:insert_result) { instance_double('MongoOperationInsertResultInstance') }
 
         it 'returns inserted ids collection' do
           expect(collection)
