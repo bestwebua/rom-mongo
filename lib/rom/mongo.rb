@@ -2,9 +2,4 @@
 
 require_relative 'mongo/core'
 
-module ROM
-  module Mongo
-    class Error < StandardError; end
-    # Your code goes here...
-  end
-end
+ROM.register_adapter(:mongo, ROM::Mongo)
