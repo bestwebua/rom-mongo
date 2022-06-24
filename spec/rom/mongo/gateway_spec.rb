@@ -17,44 +17,17 @@ RSpec.describe ROM::Mongo::Gateway do
   end
 
   describe '#dataset' do
-    context 'when addes dataset with existing collection name' do
-      it 'addes new dataset' do
-        expect(client)
-          .to receive_message_chain(:database, :collection_names)
-          .and_return([field_name.to_s])
-        expect(client)
-          .to receive(:[])
-          .with(field_name)
-          .and_return(mongo_collection)
-        expect(dataset_class)
-          .to receive(:new)
-          .with(mongo_collection)
-          .and_return(dataset_instance)
-        expect(gateway_instance.dataset(field_name, dataset_class)).to eq(dataset_instance)
-        expect(gateway_instance.datasets).to include(field_name => dataset_instance)
-      end
-    end
-
-    context 'when attempts to add dataset with non existing collection name' do
-      let(:collection_namespace) { "database.#{field_name}" }
-
-      it do
-        expect(client)
-          .to receive_message_chain(:database, :collection_names)
-          .and_return([])
-        expect(client)
-          .to receive(:[])
-          .with(field_name)
-          .and_return(mongo_collection)
-        expect(mongo_collection)
-          .to receive(:namespace)
-          .and_return(collection_namespace)
-        expect { gateway_instance.dataset(field_name, dataset_class) }
-          .to raise_error(
-            ROM::Mongo::Error::NonExistingCollection,
-            "Non existing collection: #{collection_namespace}"
-          )
-      end
+    it 'addes new dataset' do
+      expect(client)
+        .to receive(:[])
+        .with(field_name)
+        .and_return(mongo_collection)
+      expect(dataset_class)
+        .to receive(:new)
+        .with(mongo_collection)
+        .and_return(dataset_instance)
+      expect(gateway_instance.dataset(field_name, dataset_class)).to eq(dataset_instance)
+      expect(gateway_instance.datasets).to include(field_name => dataset_instance)
     end
   end
 

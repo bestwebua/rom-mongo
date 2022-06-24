@@ -101,11 +101,9 @@ module ROM
       #
       # @api public
       def insert(*attributes)
-        attributes.flatten!
-        collection.public_send(
-          attributes.one? ? :insert_one : :insert_many,
-          attributes
-        ).inserted_ids
+        method_params =
+          attributes.one? ? [:insert_one, *attributes] : [:insert_many, attributes]
+        collection.public_send(*method_params).inserted_ids
       end
 
       # Difines count for collection view
