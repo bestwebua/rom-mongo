@@ -83,7 +83,7 @@ RSpec.describe ROM::Mongo::Dataset do
   end
 
   describe '#insert' do
-    subject(:insert) { dataset_instance.insert(attributes) }
+    subject(:insert) { dataset_instance.insert(*attributes) }
 
     context 'when inserts one document' do
       let(:attributes) { random_dataset(size: 1) }
@@ -93,7 +93,7 @@ RSpec.describe ROM::Mongo::Dataset do
       it 'returns inserted ids collection' do
         expect(collection)
           .to receive(:insert_one)
-          .with(attributes)
+          .with(*attributes)
           .and_return(insert_result)
         expect(insert_result)
           .to receive(:inserted_ids)

@@ -39,7 +39,7 @@ module ROM
       #
       # @api public
       def dataset(name, dataset_class = ROM::Mongo::Dataset)
-        datasets[name] = dataset_class.new(init_collection(name))
+        datasets[name] = dataset_class.new(client[name])
       end
 
       # Checkes if dataset exists
@@ -68,24 +68,6 @@ module ROM
 
       # @api private
       attr_reader :client
-
-      # @api private
-      def existing_collection?(name)
-        client.database.collection_names.map(&:to_sym).include?(name)
-      end
-
-      # Inites collection object
-      #
-      # @param [Symbol] name collection name
-      #
-      # @return [Mongo::Collection, ROM::Mongo::Error::NonExistingCollection] The collection object or error
-      #
-      # @api private
-      def init_collection(name)
-        collection = client[name]
-        return collection if existing_collection?(name)
-        raise ROM::Mongo::Error::NonExistingCollection, collection.namespace
-      end
     end
   end
 end
