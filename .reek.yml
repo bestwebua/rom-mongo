@@ -5,6 +5,7 @@ detectors:
   FeatureEnvy:
     exclude:
       - ROM::Mongo::Dataset#insert
+      - ROM::Mongo::Schema#to_output_hash
 
 exclude_paths:
   - spec/support/helpers
