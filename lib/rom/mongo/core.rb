@@ -11,5 +11,6 @@ module ROM
     require_relative '../mongo/version'
     require_relative '../mongo/dataset'
     require_relative '../mongo/gateway'
+    require_relative '../mongo/schema'
   end
 end
