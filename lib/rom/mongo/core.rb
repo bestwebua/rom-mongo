@@ -8,5 +8,6 @@ module ROM
     require_relative '../mongo/dataset'
     require_relative '../mongo/gateway'
     require_relative '../mongo/schema'
+    require_relative '../mongo/relation'
   end
 end
