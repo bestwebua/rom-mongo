@@ -6,6 +6,11 @@ detectors:
     exclude:
       - ROM::Mongo::Dataset#insert
       - ROM::Mongo::Schema#to_output_hash
+      - ROM::Mongo::Commands::Create#execute
+
+  ManualDispatch:
+    exclude:
+      - ROM::Mongo::Commands::Helper#pk
 
 exclude_paths:
   - spec/support/helpers
