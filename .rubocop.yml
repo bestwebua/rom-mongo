@@ -248,6 +248,12 @@ Layout/SpaceBeforeBrackets:
 Layout/LineEndStringConcatenationIndentation:
   Enabled: true
 
+Layout/LineContinuationLeadingSpace:
+  Enabled: true
+
+Layout/LineContinuationSpacing:
+  Enabled: true
+
 Lint/NonDeterministicRequireOrder:
   Enabled: false
 
@@ -389,7 +395,13 @@ Lint/UselessRuby2Keywords:
 Lint/RefinementImportMethods:
   Enabled: true
 
-Gemspec/DateAssignment:
+Lint/ConstantOverwrittenInRescue:
+  Enabled: true
+
+Lint/NonAtomicFileOperation:
+  Enabled: true
+
+Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
 
 Gemspec/RequireMFA:

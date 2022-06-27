@@ -1,32 +1,96 @@
-# ROM::Mongo
+# MongoDB adapter for Ruby Object Mapper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rom/mongo`. To experiment with that code, run `bin/console` for an interactive prompt.
+<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/5ea9da61ef468b8ad4c4/maintainability)](https://codeclimate.com/github/bestwebua/rom-mongo/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5ea9da61ef468b8ad4c4/test_coverage)](https://codeclimate.com/github/bestwebua/rom-mongo/test_coverage) -->
+[![CircleCI](https://circleci.com/gh/bestwebua/rom-mongo/tree/master.svg?style=svg)](https://circleci.com/gh/bestwebua/rom-mongo/tree/master)
+[![Gem Version](https://badge.fury.io/rb/rom-mongodb.svg)](https://badge.fury.io/rb/rom-mongodb)
+[![Downloads](https://img.shields.io/gem/dt/rom-mongodb.svg?colorA=004d99&colorB=0073e6)](https://rubygems.org/gems/rom-mongodb)
+[![GitHub](https://img.shields.io/github/license/bestwebua/rom-mongo)](LICENSE.txt)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
-TODO: Delete this and the text above, and describe your gem
+`rom-mongodb` - MongoDB adapter for [ROM](https://rom-rb.org). What is ROM? It's a fast ruby persistence library with the goal of providing powerful object mapping capabilities without limiting the full power of the underlying datastore.
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Code of Conduct](#code-of-conduct)
+- [Credits](#credits)
+- [Versioning](#versioning)
+- [Changelog](CHANGELOG.md)
+
+## Requirements
+
+Ruby MRI 2.5.0+
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+Add this line to your application's `Gemfile`:
 
-    $ bundle add rom-mongodb
+```ruby
+gem 'rom-mongodb'
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
 
     $ gem install rom-mongodb
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# Define your container with mongo adapter
 
-## Development
+require 'mongo'
+require 'rom'
+require 'rom/mongodb'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+connection = Mongo::Client.new('mongodb://127.0.0.1:27017/your_db_name')
+container = ROM.container(:mongo, connection) do |config|
+  config.relation(:users) do
+    schema(:users) do
+      attribute :_id, ROM::Types.Nominal(BSON::ObjectId)
+      attribute :email, ROM::Types::String
+      attribute :rating, ROM::Types::Integer
+      attribute :status, ROM::Types::Bool
+    end
+  end
+end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Define your repository
+
+require 'rom/repository'
+
+User = ::Class.new(ROM::Repository[:users]) do
+  commands(:create, :delete, update: :by_pk)
+
+  def all
+    users.to_a
+  end
+
+  def find(**options)
+    users.find(options)
+  end
+end
+
+user_repository = User.new(container)
+
+# Now you can do some manipulations with your repository
+
+user_repository.create({ email: 'olo@domain.com', rating: 42, status: true })
+user_repository.all
+user_repository.find(email: 'olo@domain.com')
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rom-mongodb. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/rom-mongodb/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/bestwebua/rom-mongo. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. Please check the [open tickets](https://github.com/bestwebua/rom-mongo/issues). Be sure to follow Contributor Code of Conduct below and our [Contributing Guidelines](CONTRIBUTING.md).
 
 ## License
 
@@ -34,4 +98,13 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the ROM::Mongo project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rom-mongodb/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the rom-mongodb project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+## Credits
+
+- [The Contributors](https://github.com/bestwebua/rom-mongo/graphs/contributors) for code and awesome suggestions
+- [The Stargazers](https://github.com/bestwebua/rom-mongo/stargazers) for showing their support
+
+## Versioning
+
+rom-mongodb uses [Semantic Versioning 2.0.0](https://semver.org)
