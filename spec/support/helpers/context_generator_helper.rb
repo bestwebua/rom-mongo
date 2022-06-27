@@ -15,6 +15,14 @@ module ROM
         ffaker.domain_word
       end
 
+      def random_email
+        ffaker.email
+      end
+
+      def random_status
+        [true, false].sample
+      end
+
       def random_projection_options
         {
           projection: (1..random_positive_number).each_with_object({}) { |_, hash| hash[random_word.to_sym] = true }

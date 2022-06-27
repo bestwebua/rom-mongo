@@ -4,6 +4,7 @@ defaults: &defaults
   working_directory: ~/rom-mongo
   docker:
     - image: cimg/ruby:<< parameters.ruby-version >>
+    - image: circleci/mongo:5.0.6-focal-ram
 
 orbs:
   ruby: circleci/ruby@1.8.0
@@ -111,6 +112,7 @@ jobs:
         type: string
     docker:
       - image: cimg/ruby:<< parameters.ruby-version >>
+      - image: circleci/mongo:5.0.6-focal-ram
     steps:
       - checkout
       - <<: *use_compatible_gemspec
