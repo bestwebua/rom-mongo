@@ -15,6 +15,7 @@ RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = :expect }
 
   config.include ROM::Mongo::ContextGeneratorHelper
+  config.include ROM::Mongo::IntegrationHelper, type: :integration
 
   ::Kernel.srand(config.seed)
 end
