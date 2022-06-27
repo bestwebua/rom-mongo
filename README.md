@@ -1,7 +1,7 @@
 # MongoDB adapter for Ruby Object Mapper
 
-<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/5ea9da61ef468b8ad4c4/maintainability)](https://codeclimate.com/github/bestwebua/rom-mongo/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/5ea9da61ef468b8ad4c4/test_coverage)](https://codeclimate.com/github/bestwebua/rom-mongo/test_coverage) -->
+[![Maintainability](https://api.codeclimate.com/v1/badges/5b38ebba392bd37f166b/maintainability)](https://codeclimate.com/github/bestwebua/rom-mongo/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5b38ebba392bd37f166b/test_coverage)](https://codeclimate.com/github/bestwebua/rom-mongo/test_coverage)
 [![CircleCI](https://circleci.com/gh/bestwebua/rom-mongo/tree/master.svg?style=svg)](https://circleci.com/gh/bestwebua/rom-mongo/tree/master)
 [![Gem Version](https://badge.fury.io/rb/rom-mongodb.svg)](https://badge.fury.io/rb/rom-mongodb)
 [![Downloads](https://img.shields.io/gem/dt/rom-mongodb.svg?colorA=004d99&colorB=0073e6)](https://rubygems.org/gems/rom-mongodb)
