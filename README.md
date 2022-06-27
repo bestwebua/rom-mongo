@@ -49,7 +49,7 @@ Or install it yourself as:
 
 require 'mongo'
 require 'rom'
-require 'rom/mongodb'
+require 'rom/mongo'
 
 connection = Mongo::Client.new('mongodb://127.0.0.1:27017/your_db_name')
 container = ROM.container(:mongo, connection) do |config|
