@@ -59,6 +59,7 @@ container = ROM.container(:mongo, connection) do |config|
       attribute :email, ROM::Types::String
       attribute :rating, ROM::Types::Integer
       attribute :status, ROM::Types::Bool
+      attribute :orders?, ROM::Types::Array # optional attribute, if field does not exists will return nil
     end
   end
 end
@@ -67,7 +68,7 @@ end
 
 require 'rom/repository'
 
-User = ::Class.new(ROM::Repository[:users]) do
+UserRepository = ::Class.new(ROM::Repository[:users]) do
   commands(:create, :delete, update: :by_pk)
 
   def all
@@ -79,7 +80,7 @@ User = ::Class.new(ROM::Repository[:users]) do
   end
 end
 
-user_repository = User.new(container)
+user_repository = UserRepository.new(container)
 
 # Now you can do some manipulations with your repository
 
