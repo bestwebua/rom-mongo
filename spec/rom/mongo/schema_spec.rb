@@ -13,6 +13,7 @@ RSpec.describe ROM::Mongo::Schema do
         attribute :id, ROM::Types::Integer.meta(primary_key: true)
         attribute :name, ROM::Types::String
         attribute :success, ROM::Types::Bool
+        attribute :orders?, ROM::Types::Array
       end.call
     end
 
