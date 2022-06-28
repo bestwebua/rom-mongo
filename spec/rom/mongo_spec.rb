@@ -10,6 +10,7 @@ RSpec.describe ROM::Mongo, type: :integration do
             attribute :email, ROM::Types::String
             attribute :rating, ROM::Types::Integer
             attribute :status, ROM::Types::Bool
+            attribute :orders?, ROM::Types::Array
           end
         end
       end
@@ -95,6 +96,7 @@ RSpec.describe ROM::Mongo, type: :integration do
           expect(new_user.email).to eq(email)
           expect(new_user.rating).to eq(rating)
           expect(new_user.status).to eq(status)
+          expect(new_user.orders).to be_nil
         end
       end
 
@@ -119,6 +121,7 @@ RSpec.describe ROM::Mongo, type: :integration do
           expect(updated_user.email).to eq(new_email)
           expect(updated_user.rating).to eq(new_rating)
           expect(updated_user.status).to eq(new_status)
+          expect(updated_user.orders).to be_nil
           expect(user_repository.find(_id: user_id)).to eq(updated_user)
         end
       end
@@ -139,6 +142,7 @@ RSpec.describe ROM::Mongo, type: :integration do
           expect(deleted_user.email).to eq(email)
           expect(deleted_user.rating).to eq(rating)
           expect(deleted_user.status).to eq(status)
+          expect(deleted_user.orders).to be_nil
         end
       end
     end
