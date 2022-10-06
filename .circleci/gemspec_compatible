@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| ::File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'mongo', '~> 2.17', '>= 2.17.1'
+  spec.add_runtime_dependency 'mongo', '~> 2.18', '>= 2.18.1'
   spec.add_runtime_dependency 'rom-core', '~> 5.2', '>= 5.2.6'
 
   spec.add_development_dependency 'ffaker', '~> 2.21'
