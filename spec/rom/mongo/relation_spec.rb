@@ -28,7 +28,7 @@ RSpec.describe ROM::Mongo::Relation do
     let(:id) { random_positive_number }
 
     it do
-      expect(dataset).to receive(:find).with(_id: id)
+      expect(dataset).to receive(:find).with({ _id: id })
       by_pk
     end
   end

@@ -35,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'ffaker', '~> 2.21'
   spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   spec.add_development_dependency 'rom-repository', '~> 5.2', '>= 5.2.2'
-  spec.add_development_dependency 'rspec', '~> 3.11'
+  spec.add_development_dependency 'rspec', '~> 3.12'
 end
