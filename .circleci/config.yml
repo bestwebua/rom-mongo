@@ -7,7 +7,7 @@ defaults: &defaults
     - image: circleci/mongo:5.0.6-focal-ram
 
 orbs:
-  ruby: circleci/ruby@1.8.0
+  ruby: circleci/ruby@2.0.0
 
 references:
   restore_bundle_cache: &restore_bundle_cache
@@ -19,14 +19,8 @@ references:
     run:
       name: Installing gems
       command: |
-            bundle config set --local path 'vendor/bundle'
+            bundle config set --local path '~/vendor/bundle'
             bundle install
-
-  save_bundle_cache: &save_bundle_cache
-    save_cache:
-      key: rom-mongo-{{ checksum "rom-mongodb.gemspec" }}
-      paths:
-        - vendor/bundle
 
   install_codeclimate_reporter: &install_codeclimate_reporter
     run:
@@ -38,14 +32,12 @@ references:
   use_latest_gemspec: &use_latest_gemspec
     run:
       name: Using latest gemspec
-      command: |
-            cp .circleci/gemspec_latest rom-mongodb.gemspec
+      command: cp .circleci/gemspec_latest rom-mongodb.gemspec
 
   use_compatible_gemspec: &use_compatible_gemspec
     run:
       name: Using compatible gemspec
-      command: |
-            cp .circleci/gemspec_compatible rom-mongodb.gemspec
+      command: cp .circleci/gemspec_compatible rom-mongodb.gemspec
 
 jobs:
   linters-ruby:
@@ -61,7 +53,6 @@ jobs:
       - <<: *use_latest_gemspec
       - <<: *restore_bundle_cache
       - <<: *bundle_install
-      - <<: *save_bundle_cache
 
       - run:
           name: Running Overcommit
@@ -82,7 +73,6 @@ jobs:
       - <<: *use_latest_gemspec
       - <<: *restore_bundle_cache
       - <<: *bundle_install
-      - <<: *save_bundle_cache
       - <<: *install_codeclimate_reporter
 
       - run:
@@ -117,9 +107,9 @@ jobs:
       - checkout
       - <<: *use_compatible_gemspec
       - ruby/install-deps:
-          bundler-version: "2.3.23"
+          bundler-version: "2.3.26"
           with-cache: false
-          path: './vendor/custom_bundle'
+          path: '~/vendor/custom_bundle'
       - run:
           name: Running compatibility tests
           command: bundle exec rspec
@@ -130,12 +120,12 @@ workflows:
       - linters-ruby:
           matrix:
             parameters:
-              ruby-version: ["3.1"]
+              ruby-version: ["3.2"]
       - tests-ruby:
           matrix:
             parameters:
-              ruby-version: ["3.1"]
+              ruby-version: ["3.2"]
       - compatibility-ruby:
           matrix:
             parameters:
-              ruby-version: ["2.5", "2.6", "2.7", "3.0"]
+              ruby-version: ["2.5", "2.6", "2.7", "3.0", "3.1"]
