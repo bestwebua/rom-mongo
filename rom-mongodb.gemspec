@@ -23,17 +23,16 @@ Gem::Specification.new do |spec|
   }
 
   spec.required_ruby_version = '>= 2.5.0'
+  spec.files = `git ls-files -z`.split("\x0").select { |f| f.match(%r{^(bin|lib)/|.ruby-version|rom-mongodb.gemspec|LICENSE}) }
+  spec.require_paths = %w[lib]
 
-  spec.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| ::File.basename(f) }
-  spec.require_paths = ['lib']
+  rom_version = ::Gem::Version.new(::RUBY_VERSION) >= ::Gem::Version.new('2.7.0') ? '~> 5.3' : '~> 5.2'
 
-  spec.add_runtime_dependency 'mongo', '~> 2.18', '>= 2.18.1'
-  spec.add_runtime_dependency 'rom-core', '~> 5.2', '>= 5.2.6'
+  spec.add_runtime_dependency 'mongo', '~> 2.18', '>= 2.18.2'
+  spec.add_runtime_dependency 'rom-core', rom_version
 
   spec.add_development_dependency 'ffaker', '~> 2.21'
   spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
-  spec.add_development_dependency 'rom-repository', '~> 5.2', '>= 5.2.2'
+  spec.add_development_dependency 'rom-repository', rom_version
   spec.add_development_dependency 'rspec', '~> 3.12'
 end
