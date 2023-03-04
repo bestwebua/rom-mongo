@@ -19,6 +19,17 @@ references:
             bundle config set --local path '~/vendor/bundle'
             bundle install
 
+  install_linters: &install_linters
+    run:
+      name: Installing bunch of linters
+      command: |
+            curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.deb.sh' | sudo -E bash
+            sudo apt-get update -y
+            sudo apt-get install -y lefthook shellcheck yamllint
+            npm install --prefix='~/.local' --global --save-dev git+https://github.com/streetsidesoftware/cspell-cli markdownlint-cli
+            cp .circleci/linter_configs/.fasterer.yml .fasterer.yml
+            cp .circleci/linter_configs/.lefthook.yml lefthook.yml
+
   install_codeclimate_reporter: &install_codeclimate_reporter
     run:
       name: Installing CodeClimate test reporter
@@ -55,12 +66,23 @@ jobs:
       - <<: *use_latest_bundler
       - <<: *use_latest_gemspec
       - <<: *bundle_install
+      - <<: *install_linters
 
       - run:
-          name: Running Overcommit
-          command: |
-            bundle exec overcommit -s
-            SKIP=AuthorEmail,AuthorName bundle exec overcommit -r
+          name: Running code style linters
+          command: lefthook run code-style-linters
+
+      - run:
+          name: Running code performance linters
+          command: lefthook run code-performance-linters
+
+      - run:
+          name: Running code vulnerability linters
+          command: lefthook run code-vulnerability-linters
+
+      - run:
+          name: Running code documentation linters
+          command: lefthook run code-documentation-linters
 
   tests-ruby:
     parameters:
@@ -125,7 +147,7 @@ workflows:
       - linters-ruby:
           matrix:
             parameters:
-              ruby-version: ["3.2"]
+              ruby-version: ["3.2-node"]
       - tests-ruby:
           matrix:
             parameters:
