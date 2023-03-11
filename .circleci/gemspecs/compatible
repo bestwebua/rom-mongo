@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+require_relative 'lib/rom/mongo/version'
+
+Gem::Specification.new do |spec|
+  spec.name        = 'rom-mongodb'
+  spec.version     = ROM::Mongo::VERSION
+  spec.authors     = ['Vladislav Trotsenko']
+  spec.email       = ['admin@bestweb.com.ua']
+  spec.summary     = %(rom-mongodb)
+  spec.description = 'MongoDB adapter for Ruby Object Mapper'
+  spec.homepage    = 'https://github.com/bestwebua/rom-mongo'
+  spec.license     = 'MIT'
+
+  spec.required_ruby_version = '>= 2.5.0'
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.require_paths = %w[lib]
+
+  rom_version = ::Gem::Version.new(::RUBY_VERSION) >= ::Gem::Version.new('2.7.0') ? '~> 5.3' : '~> 5.2'
+
+  spec.add_runtime_dependency 'mongo', '~> 2.18', '>= 2.18.2'
+  spec.add_runtime_dependency 'rom-core', rom_version
+
+  spec.add_development_dependency 'ffaker'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rom-repository'
+  spec.add_development_dependency 'rspec'
+end

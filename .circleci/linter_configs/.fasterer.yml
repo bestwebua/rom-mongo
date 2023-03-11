@@ -1,0 +1,6 @@
+---
+
+exclude_paths:
+  - '.circleci/**/*.rb'
+  - 'lib/rom/mongo/dataset.rb'
+  - 'spec/rom/mongo/dataset_spec.rb'
