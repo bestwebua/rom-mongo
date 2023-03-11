@@ -145,8 +145,40 @@ jobs:
           name: Running compatibility tests
           command: bundle exec rspec
 
+  rubygems-deps-ruby:
+    parameters:
+      ruby-version:
+        type: string
+
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - run:
+          name: Building rubygems dependencies from default gemspec on minimal Ruby version
+          command: bundle install
+
+  releasing-gem-from-ruby:
+    parameters:
+      ruby-version:
+        type: string
+
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - add_ssh_keys:
+          fingerprints:
+            - "7e:1a:db:cc:a8:fc:4e:7d:74:67:eb:27:73:a2:62:b2"
+
+      - run:
+          name: Publishing new release
+          command: ./.circleci/scripts/release.sh
+
 workflows:
-  build_and_test:
+  build_test_deploy:
     jobs:
       - linters-ruby:
           matrix:
@@ -160,3 +192,19 @@ workflows:
           matrix:
             parameters:
               ruby-version: ["2.5", "2.6", "2.7", "3.0", "3.1"]
+      - rubygems-deps-ruby:
+          matrix:
+            parameters:
+              ruby-version: ["2.5"]
+      - releasing-gem-from-ruby:
+          requires:
+            - linters-ruby
+            - tests-ruby
+            - compatibility-ruby
+            - rubygems-deps-ruby
+          matrix:
+            parameters:
+              ruby-version: ["2.5"]
+          filters:
+            branches:
+              only: master
