@@ -27,16 +27,11 @@ RSpec.describe ROM::Mongo::Commands::Delete do
         .with({ id: 42, **attributes }, { projection: { id: true, a: true } })
         .and_return(dataset)
       allow(dataset)
-        .to receive(:first)
-        .and_return(
-          {
-            'id' => 42,
-            'a' => '42',
-            'b' => true
-          }
-        )
-      allow(dataset).to receive(:delete_one).and_return(dataset)
-      allow(dataset).to receive(:deleted_count).and_return(1)
+        .to receive_messages(first: {
+                               'id' => 42,
+                               'a' => '42',
+                               'b' => true
+                             }, delete_one: dataset, deleted_count: 1)
     end
 
     it { is_expected.to eq(id: 42, a: '42') }
@@ -53,16 +48,11 @@ RSpec.describe ROM::Mongo::Commands::Delete do
         .with({ id: 42, **attributes }, { projection: { id: true, a: true } })
         .and_return(dataset)
       allow(dataset)
-        .to receive(:first)
-        .and_return(
-          {
-            'id' => 42,
-            'a' => '42',
-            'b' => true
-          }
-        )
-      allow(dataset).to receive(:delete_one).and_return(dataset)
-      allow(dataset).to receive(:deleted_count).and_return(0)
+        .to receive_messages(first: {
+                               'id' => 42,
+                               'a' => '42',
+                               'b' => true
+                             }, delete_one: dataset, deleted_count: 0)
     end
 
     it { is_expected.to be_nil }
