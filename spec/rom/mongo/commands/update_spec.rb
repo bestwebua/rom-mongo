@@ -22,9 +22,8 @@ RSpec.describe ROM::Mongo::Commands::Update do
     let(:attributes) { { a: '42', b: true } }
 
     before do
-      allow(dataset).to receive(:collection).and_return(dataset)
+      allow(dataset).to receive_messages(collection: dataset, modified_count: 1)
       allow(dataset).to receive(:update_one).with({ id: 42 }, attributes).and_return(dataset)
-      allow(dataset).to receive(:modified_count).and_return(1)
     end
 
     it { is_expected.to eq(id: 42, a: '42') }
@@ -37,9 +36,8 @@ RSpec.describe ROM::Mongo::Commands::Update do
     let(:attributes) { { a: 1 } }
 
     before do
-      allow(dataset).to receive(:collection).and_return(dataset)
+      allow(dataset).to receive_messages(collection: dataset, modified_count: 0)
       allow(dataset).to receive(:update_one).with({ id: 42 }, attributes).and_return(dataset)
-      allow(dataset).to receive(:modified_count).and_return(0)
     end
 
     it { is_expected.to be_nil }

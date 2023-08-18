@@ -9,7 +9,7 @@ defaults: &defaults
     - image: circleci/mongo:5.0.6-focal-ram
 
 orbs:
-  ruby: circleci/ruby@2.0.0
+  ruby: circleci/ruby@2.1.0
 
 references:
   bundle_install: &bundle_install
