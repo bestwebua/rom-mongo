@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   rom_version = ::Gem::Version.new(::RUBY_VERSION) >= ::Gem::Version.new('2.7.0') ? '~> 5.3' : '~> 5.2'
 
-  spec.add_runtime_dependency 'mongo', '~> 2.18', '>= 2.18.2'
+  spec.add_runtime_dependency 'mongo', '~> 2.19', '>= 2.19.1'
   spec.add_runtime_dependency 'rom-core', rom_version
 
   spec.add_development_dependency 'ffaker', '~> 2.21'

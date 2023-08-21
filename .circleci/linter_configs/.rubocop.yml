@@ -87,6 +87,9 @@ Gemspec/RequireMFA:
 Gemspec/RubyVersionGlobalsUsage:
   Enabled: false
 
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
 RSpec/ExampleLength:
   Enabled: false
 
