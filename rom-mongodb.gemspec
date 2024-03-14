@@ -26,13 +26,15 @@ Gem::Specification.new do |spec|
   spec.files = `git ls-files -z`.split("\x0").select { |f| f.match(%r{^(bin|lib)/|.ruby-version|rom-mongodb.gemspec|LICENSE}) }
   spec.require_paths = %w[lib]
 
-  rom_version = ::Gem::Version.new(::RUBY_VERSION) >= ::Gem::Version.new('2.7.0') ? '~> 5.3' : '~> 5.2'
+  current_ruby_version = ::Gem::Version.new(::RUBY_VERSION)
+  rom_version = current_ruby_version >= ::Gem::Version.new('2.7.0') ? '~> 5.3' : '~> 5.2'
+  ffaker_version = current_ruby_version >= ::Gem::Version.new('3.0.0') ? '~> 2.23' : '~> 2.21'
 
-  spec.add_runtime_dependency 'mongo', '~> 2.19', '>= 2.19.1'
+  spec.add_runtime_dependency 'mongo', '~> 2.19', '>= 2.19.3'
   spec.add_runtime_dependency 'rom-core', rom_version
 
-  spec.add_development_dependency 'ffaker', '~> 2.21'
-  spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
+  spec.add_development_dependency 'ffaker', ffaker_version
+  spec.add_development_dependency 'rake', '~> 13.1'
   spec.add_development_dependency 'rom-repository', rom_version
-  spec.add_development_dependency 'rspec', '~> 3.12'
+  spec.add_development_dependency 'rspec', '~> 3.13'
 end
